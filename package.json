@@ -1,0 +1,24 @@
+{
+  "name": "dist",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start:prod": "node main"
+  },
+  "dependencies": {
+    "@nestjs/common": "^9.0.0",
+    "@nestjs/core": "^9.0.0",
+    "@nestjs/platform-express": "^9.0.0",
+    "@nestjs/swagger": "^6.1.4",
+    "ccxt": "^2.4.44",
+    "reflect-metadata": "^0.1.13",
+    "rxjs": "^7.5.5",
+    "swagger-ui-express": "^4.6.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "types": "./main.d.ts"
+}
