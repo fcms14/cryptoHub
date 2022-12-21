@@ -6,8 +6,12 @@ const app_module_1 = require("./app.module");
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
     const config = new swagger_1.DocumentBuilder()
-        .setTitle('Documentação com Swagger - Fábrica de Sinapse')
-        .setDescription('O Swagger (aka OpenApi) é uma biblioteca muito conhecida no universo backend, estando disponível para diversas linguagens e frameworks. Ela gera um site interno no seu backend que descreve, com muitos detalhes, cada endpoint e estrutura de entidades presentes na sua aplicação.')
+        .setTitle('CCXT Documentation with Swagger')
+        .setDescription(
+            `A JavaScript / Python / PHP cryptocurrency trading API with support for more than 100 bitcoin/altcoin exchanges 
+            \n <a target='_blank' href='https://docs.ccxt.com/en/latest/manual.html'> CCXT - Manual  </a>
+            \n <a target='_blank' href='https://github.com/ccxt/ccxt'> CCXT - Github </a>`,
+        )
         .setVersion('1.0')
         .addTag('marketHistory')
         .build();
