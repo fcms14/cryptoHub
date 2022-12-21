@@ -7,11 +7,9 @@ async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
     const config = new swagger_1.DocumentBuilder()
         .setTitle('CCXT Documentation with Swagger')
-        .setDescription(
-            `A JavaScript / Python / PHP cryptocurrency trading API with support for more than 100 bitcoin/altcoin exchanges 
-            \n <a target='_blank' href='https://docs.ccxt.com/en/latest/manual.html'> CCXT - Manual  </a>
-            \n <a target='_blank' href='https://github.com/ccxt/ccxt'> CCXT - Github </a>`,
-        )
+        .setDescription(`A JavaScript / Python / PHP cryptocurrency trading API with support for more than 100 bitcoin/altcoin exchanges 
+      \n <a target='_blank' href='https://docs.ccxt.com/en/latest/manual.html'> CCXT - Manual  </a>
+      \n <a target='_blank' href='https://github.com/ccxt/ccxt'> CCXT - Github </a>`)
         .setVersion('1.0')
         .addTag('marketHistory')
         .build();
