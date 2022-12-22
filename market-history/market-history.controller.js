@@ -23,7 +23,7 @@ let MarketHistoryController = class MarketHistoryController {
     }
     async findOne(i_exchange, i_ticker, i_timeFrame, i_since, i_limit) {
         try {
-            const response = await this.marketHistoryService.findOne(i_exchange.toLowerCase(), i_ticker.toUpperCase(), i_timeFrame.toLowerCase(), i_since ? Number(i_since) : undefined, i_limit ? Number(i_limit) : undefined);
+            const response = await this.marketHistoryService.findOne(i_exchange.toLowerCase(), i_ticker.toUpperCase(), i_timeFrame, i_since ? Number(i_since) : undefined, i_limit ? Number(i_limit) : undefined);
             if (response.status) {
                 throw ({ status: response.status, name: response.name, message: response.message });
             }
@@ -48,7 +48,7 @@ __decorate([
     }),
     (0, swagger_1.ApiParam)({
         name: 'i_timeFrame',
-        example: '1d',
+        enum: ['1m', '5m', '15m', '30m', '60m', '1h', '2h', '3h', '4h', '6h', '12h', '24h', '1d', '7d', '1w', '1M'],
         description: `Required to query the market history`,
     }),
     (0, swagger_1.ApiQuery)({
@@ -61,7 +61,7 @@ __decorate([
     (0, swagger_1.ApiQuery)({
         name: "i_limit",
         example: 1,
-        description: "Used to query the market history at the defined limit. max limit = 1000",
+        description: "Used to query the market history at the defined limit",
         required: false,
         type: Number
     }),
