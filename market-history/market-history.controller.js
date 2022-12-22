@@ -21,16 +21,25 @@ let MarketHistoryController = class MarketHistoryController {
     constructor(marketHistoryService) {
         this.marketHistoryService = marketHistoryService;
     }
-    findOne(i_exchange, i_ticker, i_timeFrame, i_since, i_limit) {
-        return this.marketHistoryService.findOne(i_exchange.toLowerCase(), i_ticker.toUpperCase(), i_timeFrame.toLowerCase(), i_since ? Number(i_since) : undefined, i_limit ? Number(i_limit) : undefined);
+    async findOne(i_exchange, i_ticker, i_timeFrame, i_since, i_limit) {
+        try {
+            const response = await this.marketHistoryService.findOne(i_exchange.toLowerCase(), i_ticker.toUpperCase(), i_timeFrame.toLowerCase(), i_since ? Number(i_since) : undefined, i_limit ? Number(i_limit) : undefined);
+            if (response.status) {
+                throw ({ status: response.status, name: response.name, message: response.message });
+            }
+            return response;
+        }
+        catch (error) {
+            throw new common_1.HttpException({ status: error.status || common_1.HttpStatus.NOT_FOUND, name: error.name, message: error.message }, common_1.HttpStatus.NOT_FOUND);
+        }
     }
 };
 __decorate([
     openapi.ApiOperation({ description: "" }),
     (0, swagger_1.ApiParam)({
-        name: 'i_exchange',
-        example: 'BITMEX',
-        description: `Required to construct the exchange class`,
+        name: "i_exchange",
+        enum: require('ccxt').exchanges,
+        description: `Required to select the ticker on exchange`,
     }),
     (0, swagger_1.ApiParam)({
         name: 'i_ticker',
@@ -51,7 +60,7 @@ __decorate([
     }),
     (0, swagger_1.ApiQuery)({
         name: "i_limit",
-        example: 100,
+        example: 1,
         description: "Used to query the market history at the defined limit. max limit = 1000",
         required: false,
         type: Number
@@ -68,7 +77,7 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, String, String, Number,
         Number]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], MarketHistoryController.prototype, "findOne", null);
 MarketHistoryController = __decorate([
     (0, swagger_1.ApiTags)('marketHistory'),

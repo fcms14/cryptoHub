@@ -9,24 +9,29 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.MarketHistoryService = void 0;
 const common_1 = require("@nestjs/common");
 let MarketHistoryService = class MarketHistoryService {
-    findAll() {
-    }
     async findOne(i_exchange, i_ticker, i_timeFrame, i_since, i_limit) {
-        try {
-            const ccxt = require('ccxt');
-            if (!ccxt.exchanges.includes(i_exchange)) {
-                throw { name: "Try again", message: "Exchange does not exists" };
-            }
-            const exchange = ccxt.pro.exchanges.includes(i_exchange) ? new ccxt.pro[i_exchange]() : new ccxt[i_exchange]();
-            const ohlcv = await exchange.fetchOHLCV(i_ticker, i_timeFrame, i_since, i_limit);
-            for (let i = 0; i < ohlcv.length; i++) {
-                ohlcv[i] = [new Date(ohlcv[i][0]), ...ohlcv[i]];
-            }
-            return ohlcv;
+        const ccxt = require('ccxt');
+        if (!ccxt.exchanges.includes(i_exchange)) {
+            return { status: common_1.HttpStatus.NOT_FOUND, name: "Not Found", message: "Exchange does not exists" };
         }
-        catch (error) {
-            return { title: error.name, message: error.message };
+        const exchange = ccxt.pro.exchanges.includes(i_exchange) ? new ccxt.pro[i_exchange]() : new ccxt[i_exchange]();
+        const markets = await exchange.loadMarkets();
+        const symbols = exchange.symbols;
+        let tickers = [];
+        for (let m in markets) {
+            tickers = [...tickers, exchange.marketId(m)];
         }
+        if (!symbols.includes(i_ticker) && !tickers.includes(i_ticker)) {
+            return { status: common_1.HttpStatus.NOT_FOUND, name: "Not Found", message: `Ticker does not exists.\nTry one of: ${symbols}` };
+        }
+        const ohlcv = await exchange.fetchOHLCV(i_ticker, i_timeFrame, i_since, i_limit);
+        if (!ohlcv.length) {
+            return { status: common_1.HttpStatus.NOT_FOUND, name: "Not Found", message: "No data found in this period" };
+        }
+        for (let i = 0; i < ohlcv.length; i++) {
+            ohlcv[i] = [new Date(ohlcv[i][0]), ...ohlcv[i]];
+        }
+        return ohlcv;
     }
 };
 MarketHistoryService = __decorate([
