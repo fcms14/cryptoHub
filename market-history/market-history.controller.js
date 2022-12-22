@@ -30,17 +30,17 @@ __decorate([
     (0, swagger_1.ApiParam)({
         name: 'i_exchange',
         example: 'BITMEX',
-        description: `required to construct the exchange class`,
+        description: `Required to construct the exchange class`,
     }),
     (0, swagger_1.ApiParam)({
         name: 'i_ticker',
         example: 'XBTUSD',
-        description: `required to select the ticker on exchange`,
+        description: `Required to select the ticker on exchange`,
     }),
     (0, swagger_1.ApiParam)({
         name: 'i_timeFrame',
         example: '1d',
-        description: `required to query the market history`,
+        description: `Required to query the market history`,
     }),
     (0, swagger_1.ApiQuery)({
         name: "i_since",
