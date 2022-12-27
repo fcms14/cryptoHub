@@ -21,9 +21,24 @@ let MarketHistoryController = class MarketHistoryController {
     constructor(marketHistoryService) {
         this.marketHistoryService = marketHistoryService;
     }
-    async findOne(i_exchange, i_ticker, i_timeFrame, i_since, i_limit) {
+    listExchanges() {
+        return require('ccxt').exchanges;
+    }
+    async listTickers(i_exchange) {
         try {
-            const response = await this.marketHistoryService.findOne(i_exchange.toLowerCase(), i_ticker.toUpperCase(), i_timeFrame, i_since ? Number(i_since) : undefined, i_limit ? Number(i_limit) : undefined);
+            const response = await this.marketHistoryService.listTickers(i_exchange.toLowerCase());
+            if (response.status) {
+                throw ({ status: response.status, name: response.name, message: response.message });
+            }
+            return response;
+        }
+        catch (error) {
+            throw new common_1.HttpException({ status: error.status || common_1.HttpStatus.NOT_FOUND, name: error.name, message: error.message }, common_1.HttpStatus.NOT_FOUND);
+        }
+    }
+    async fetchOHLCV(i_exchange, i_ticker, i_timeFrame, i_since, i_limit) {
+        try {
+            const response = await this.marketHistoryService.fetchOHLCV(i_exchange.toLowerCase(), i_ticker.toUpperCase(), i_timeFrame, i_since ? Number(i_since) : undefined, i_limit ? Number(i_limit) : undefined);
             if (response.status) {
                 throw ({ status: response.status, name: response.name, message: response.message });
             }
@@ -34,6 +49,30 @@ let MarketHistoryController = class MarketHistoryController {
         }
     }
 };
+__decorate([
+    openapi.ApiOperation({ description: "" }),
+    (0, common_1.Get)('/exchanges'),
+    (0, swagger_1.ApiOkResponse)({ description: 'List of supported exchanges', type: Array, isArray: true }),
+    openapi.ApiResponse({ status: 200, type: Object }),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], MarketHistoryController.prototype, "listExchanges", null);
+__decorate([
+    openapi.ApiOperation({ description: "" }),
+    (0, swagger_1.ApiParam)({
+        name: "i_exchange",
+        enum: require('ccxt').exchanges,
+        description: `Required to list the Tickers Available on Exchanges`,
+    }),
+    (0, common_1.Get)('/symbols/:i_exchange'),
+    (0, swagger_1.ApiOkResponse)({ description: 'List of Tickers Available on Exchanges', type: Array, isArray: true }),
+    openapi.ApiResponse({ status: 200, type: Object }),
+    __param(0, (0, common_1.Param)('i_exchange')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], MarketHistoryController.prototype, "listTickers", null);
 __decorate([
     openapi.ApiOperation({ description: "" }),
     (0, swagger_1.ApiParam)({
@@ -78,7 +117,7 @@ __decorate([
     __metadata("design:paramtypes", [String, String, String, Number,
         Number]),
     __metadata("design:returntype", Promise)
-], MarketHistoryController.prototype, "findOne", null);
+], MarketHistoryController.prototype, "fetchOHLCV", null);
 MarketHistoryController = __decorate([
     (0, swagger_1.ApiTags)('marketHistory'),
     (0, common_1.Controller)('market-history'),

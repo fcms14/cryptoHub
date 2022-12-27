@@ -9,7 +9,21 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.MarketHistoryService = void 0;
 const common_1 = require("@nestjs/common");
 let MarketHistoryService = class MarketHistoryService {
-    async findOne(i_exchange, i_ticker, i_timeFrame, i_since, i_limit) {
+    async listTickers(i_exchange) {
+        const ccxt = require('ccxt');
+        if (!ccxt.exchanges.includes(i_exchange)) {
+            return { status: common_1.HttpStatus.NOT_FOUND, name: "Not Found", message: "Exchange does not exists" };
+        }
+        const exchange = ccxt.pro.exchanges.includes(i_exchange) ? new ccxt.pro[i_exchange]() : new ccxt[i_exchange]();
+        const markets = await exchange.loadMarkets();
+        const symbols = exchange.symbols;
+        let tickers = [];
+        for (let m in markets) {
+            tickers = [...tickers, exchange.marketId(m)];
+        }
+        return [...symbols, ...tickers];
+    }
+    async fetchOHLCV(i_exchange, i_ticker, i_timeFrame, i_since, i_limit) {
         const ccxt = require('ccxt');
         if (!ccxt.exchanges.includes(i_exchange)) {
             return { status: common_1.HttpStatus.NOT_FOUND, name: "Not Found", message: "Exchange does not exists" };
